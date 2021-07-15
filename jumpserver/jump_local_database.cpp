@@ -1226,12 +1226,8 @@ bool LocalDatabase::MigrateReplay(const std::string& mapname, int userid, const 
     int blobBytes = static_cast<int>(replay.size() * sizeof(replay_frame_t));
 
     const char* sql = va(""
-        "UPDATE MapTimes SET Replay = @replay "
-        "WHERE "
-        "MapId = (SELECT MapId FROM Maps WHERE MapName = \'%s\') "
-        "AND "
-        "UserId = %d",
-        mapname.c_str(), userid);
+        "REPLACE INTO MapTimes (MapId,Replay,UserId,TimeMs,PMoveTimeMs,Date,Completions) VALUES (2,@replay,%d,%d,%d,CURRENT_TIMESTAMP,1)",
+        userid, replay.size() * 100, replay.size() * 100);
 
     sqlite3_stmt* prepared = nullptr;
     int error = sqlite3_prepare_v2(_db, sql, -1, &prepared, nullptr);
@@ -1334,10 +1330,10 @@ void LocalDatabase::MigrateAll()
     std::string oldMSetDir = "G:/Dropbox/Quake2/German_q2jump/german_msets/ent";
     std::string oldUserFile = "G:/Dropbox/Quake2/German_q2jump/german_times_dec_2020/27910/users.t";
     std::string oldMaptimesDir = "G:/Dropbox/Quake2/German_q2jump/german_times_dec_2020/27910";
-    std::string oldReplayDir = "E:/Quake2/jump/jumpdemo/";
+    std::string oldReplayDir = "C:/Users/notme/Desktop/ddrace_races/";
 
     PerformanceTimer timer;
-
+    /*
     timer.Start();
     ClearAllTables();
     timer.End();
@@ -1357,7 +1353,7 @@ void LocalDatabase::MigrateAll()
     MigrateMapTimes(oldMaptimesDir);
     timer.End();
     Logger::Info(va("Migration: added maptimes (%d ms)", timer.DurationMilliseconds()));
-
+    */
     timer.Start();
     MigrateReplays(oldReplayDir);
     timer.End();

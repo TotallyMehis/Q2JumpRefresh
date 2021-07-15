@@ -4,6 +4,15 @@
 
 namespace Jump
 {
+struct ghost_data_t
+{
+	std::vector<replay_frame_t> replay;
+	
+    size_t frame = 0;
+	
+    edict_t* ghost = nullptr;
+};
+
 
 class GhostReplay
 {
@@ -12,13 +21,17 @@ public:
     static void LoadReplay();
     static void RunFrame();
     static void LoadGhostModels();
+    static void TogglePlay();
+    static void Restart();
 private:
+    static edict_t* CreateGhostEntity();
+
     static std::string PickRandomGhostModel();
 
-    static std::vector<replay_frame_t> _replay;
-    static size_t _replayFrame;
-    static edict_t* _ghost;
+    static std::vector<ghost_data_t*> _ghosts;
     static std::vector<std::string> _ghostModels;
+
+    static bool _paused;
 };
 
 }

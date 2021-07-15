@@ -15,6 +15,7 @@
 #include "jump_local_database.h"
 #include "jump_spawn.h"
 #include "jump_msets.h"
+#include "jump_ghost.h"
 
 namespace Jump
 {
@@ -51,7 +52,9 @@ namespace Jump
         { "mset", Cmd_Jump_MSet },
         { "msetlist", Cmd_Jump_MSetList },
         { "team", Cmd_Jump_Team },
-        
+        { "ghost_toggle", Cmd_Jump_Ghost_Toggle },
+        { "ghost_restart", Cmd_Jump_Ghost_Restart },
+
         { "votetime", Cmd_Jump_Vote_Time },
         { "timevote", Cmd_Jump_Vote_Time },
         { "nominate", Cmd_Jump_Vote_Nominate },
@@ -103,6 +106,7 @@ namespace Jump
     // A function used to test stuff for development
     void Cmd_Jump_Test(edict_t* ent)
     {
+        /*
         std::string testDate = GetEuropeanShortDate("2020-12-23");
         //LocalDatabase::AddUser("atestname!!");
         //int size2 = sizeof(replay_frame_t);
@@ -134,9 +138,9 @@ namespace Jump
         Logger::Info(va("All stats ms: %d", ms));
         return;
 
-
-        //LocalDatabase::MigrateAll();
-
+        */
+        LocalDatabase::MigrateAll();
+        /*
         typedef struct
         {
             vec3_t		angle;
@@ -179,6 +183,7 @@ namespace Jump
         //gi.WriteByte(svc_layout);
         //gi.WriteString(string);
         //gi.unicast(ent, true);
+        */
     }
 
     void Cmd_Jump_Inven(edict_t* ent)
@@ -949,7 +954,15 @@ namespace Jump
         }
     }
 
+    void Cmd_Jump_Ghost_Toggle(edict_t* ent)
+    {
+        GhostReplay::TogglePlay();
+    }
 
+    void Cmd_Jump_Ghost_Restart(edict_t* ent)
+    {
+        GhostReplay::Restart();
+    }
 
     void HandleGlobalCmdResponse(const global_cmd_response& response)
     {
